@@ -18,9 +18,6 @@ codec = { package = 'parity-scale-codec', version = '2.0.0', default-features = 
 log = { version = "0.4.14", default-features = false }
 serde = { version = '1.0.119', optional = true, features = ['derive'] }
 
-# Local Dependencies
-template = { package = 'pallet-template', path = '../pallets/template', default-features = false }
-
 # Substrate Dependencies
 ## Substrate Primitive Dependencies
 sp-api = { git = 'https://github.com/paritytech/substrate', branch = 'polkadot-v0.9.9', default-features = false }
@@ -71,8 +68,20 @@ xcm-builder = { git = 'https://github.com/paritytech/polkadot', branch = 'releas
 xcm-executor = { git = 'https://github.com/paritytech/polkadot', branch = 'release-v0.9.9', default-features = false }
 pallet-xcm = { git = 'https://github.com/paritytech/polkadot', branch = 'release-v0.9.9', default-features = false }
 
+# Contracts specific packages
+#pallet-contracts = { git = "https://github.com/paritytech/substrate", package = "pallet-contracts", default-features = false, branch = 'polkadot-v0.9.9' }
+#pallet-contracts-primitives = { git = "https://github.com/paritytech/substrate", package = "pallet-contracts-primitives", default-features = false, branch = 'polkadot-v0.9.9' }
+#pallet-contracts-rpc-runtime-api = { git = "https://github.com/paritytech/substrate", package = "pallet-contracts-rpc-runtime-api", default-features = false, branch = 'polkadot-v0.9.9' }
+pallet-contracts = { git = "https://github.com/paritytech/substrate", package = "pallet-contracts", default-features = false, branch = 'cmichi-tmp-experiment' }
+pallet-contracts-primitives = { git = "https://github.com/paritytech/substrate", package = "pallet-contracts-primitives", default-features = false, branch = 'cmichi-tmp-experiment' }
+pallet-contracts-rpc-runtime-api = { git = "https://github.com/paritytech/substrate", package = "pallet-contracts-rpc-runtime-api", default-features = false, branch = 'cmichi-tmp-experiment' }
+
 [features]
-default = ['std']
+default = [
+	"std",
+	# temporarily enable unstable contracts features by default, remove this before using on a production chain.
+	"contracts-unstable-interface",
+]
 runtime-benchmarks = [
 	'sp-runtime/runtime-benchmarks',
 	'frame-benchmarking',
@@ -81,7 +90,6 @@ runtime-benchmarks = [
 	'frame-system/runtime-benchmarks',
 	'pallet-balances/runtime-benchmarks',
 	'pallet-timestamp/runtime-benchmarks',
-	'template/runtime-benchmarks',
 ]
 std = [
 	"codec/std",
@@ -119,5 +127,14 @@ std = [
 	"xcm-executor/std",
 	"pallet-aura/std",
 	"sp-consensus-aura/std",
-	'template/std',
+	"pallet-contracts/std",
+	"pallet-contracts-primitives/std",
+	"pallet-contracts-rpc-runtime-api/std",
+]
+
+
+# Make contract callable functions marked as __unstable__ available. Do not enable
+# on live chains as those are subject to change.
+contracts-unstable-interface = [
+	"pallet-contracts/unstable-interface"
 ]
