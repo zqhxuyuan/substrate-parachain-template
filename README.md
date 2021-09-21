@@ -30,6 +30,9 @@ build the
 cargo build --release
 ```
 
+> NOTE: You _must_ use the release builds for parachains! The optimizations here are required
+> as in debug mode, it is expected that nodes are not able to run fast enought to produce blocks.
+
 ## Relay Chain
 
 > **NOTE**: In the following two sections, we document how to manually start a few relay chain
